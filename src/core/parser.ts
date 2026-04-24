@@ -105,7 +105,7 @@ export function parseBookMetadata(doc: Document, pageUrl: string) {
 
    // infoBlock = infoBlock.trim() + "\n";
 //書名: ${bookName}\nURL: ${pageUrl}\n${infoBlock}\n${tagsText}\n
-    const fullIntro = `${descText}\nURL: ${pageUrl}`;
+    const fullIntro = `${descText}\n\n\nURL: ${pageUrl}`;
 
     return {
         bookName: safeBookName,
