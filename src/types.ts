@@ -18,6 +18,7 @@ export interface ChapterImage {
 export interface BookMetadata {
     title: string;
     author: string;
+    description?: string;
     coverBlob: Blob | null;
     coverExt: "jpg" | "png";
     uuid?: string;

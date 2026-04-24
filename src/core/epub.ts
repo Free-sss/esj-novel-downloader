@@ -105,6 +105,7 @@ export async function buildEpub(chapters: Chapter[], metadata: BookMetadata): Pr
     const uniqueId = metadata.uuid || "id-" + Date.now();
     const title = escapeXml(metadata.title || "未知書名");
     const author = escapeXml(metadata.author || "");
+    const description = metadata.description ? escapeXml(metadata.description) : "";
     const pubdate = new Date().toISOString();
 
     const contentOpf = `<?xml version="1.0" encoding="utf-8"?>
@@ -115,6 +116,7 @@ export async function buildEpub(chapters: Chapter[], metadata: BookMetadata): Pr
             <dc:identifier id="BookId">${uniqueId}</dc:identifier>
             <dc:creator>${author}</dc:creator>
             <dc:date>${pubdate}</dc:date>
+            ${description ? `<dc:description>${description}</dc:description>` : ""}
             ${coverMeta}
           </metadata>
           <manifest>

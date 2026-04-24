@@ -64,6 +64,7 @@ export async function scrapeDetail(): Promise<void> {
                         bookName: meta.bookName,
                         author: meta.author,
                         introTxt: meta.introTxt,
+                        tagsText: meta.tagsText,
                         coverUrl: meta.coverUrl,
                         tasks
                     });

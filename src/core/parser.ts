@@ -70,8 +70,9 @@ export function parseBookMetadata(doc: Document, pageUrl: string) {
 
     // 简介
     let descText = "";
-    const descContainer = doc.querySelector("#details .description");
-
+    //#details .description
+    const descContainer = doc.querySelector(".description");
+    
     if (descContainer) {
         const clone = descContainer.cloneNode(true) as HTMLElement;
 
@@ -92,16 +93,27 @@ export function parseBookMetadata(doc: Document, pageUrl: string) {
         descText = descText.replace(/(\n\s*){3,}/g, "\n\n").trim();
     }
 
-    infoBlock = infoBlock.trim() + "\n";
+    // 标签
+    let tagsText = "";
+    const tagElements = Array.from(doc.querySelectorAll("section.widget-tags.m-t-20 a.tag"));
+    if (tagElements.length > 0) {
+        const tags = tagElements.map((el) => (el as HTMLElement).innerText.trim()).filter(Boolean);
+        if (tags.length > 0) {
+            tagsText = `标签: 🏷${tags.join("🏷")}\n`;
+        }
+    }
 
-    const fullIntro = `書名: ${bookName}\nURL: ${pageUrl}\n${infoBlock}\n${descText}\n\n`;
+   // infoBlock = infoBlock.trim() + "\n";
+//書名: ${bookName}\nURL: ${pageUrl}\n${infoBlock}\n${tagsText}\n
+    const fullIntro = `${descText}\n`;
 
     return {
         bookName: safeBookName,
         rawBookName: bookName,
         author,
         coverUrl,
-        introTxt: fullIntro
+        introTxt: fullIntro,
+        tagsText
     };
 }
 

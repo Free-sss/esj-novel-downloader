@@ -21,6 +21,7 @@ export interface DownloadOptions {
     bookName: string;
     author?: string;
     introTxt: string;
+    tagsText?: string;
     coverUrl?: string;
     tasks: DownloadTask[];
 }
@@ -272,7 +273,7 @@ async function checkIntegrityAndRetry(tasks: DownloadTask[], ctx: DownloadContex
 
 // 批量下载主入口
 export async function batchDownload(options: DownloadOptions): Promise<void> {
-    const { bookId, bookName, author, introTxt, coverUrl, tasks } = options;
+    const { bookId, bookName, author, introTxt, tagsText, coverUrl, tasks } = options;
     const total = tasks.length;
 
     // 初始化 UI 和状态
@@ -367,6 +368,27 @@ export async function batchDownload(options: DownloadOptions): Promise<void> {
     for (let i = 0; i < total; i++) {
         const item = state.globalChaptersMap.get(i);
         if (item) {
+            if (i === 0 && tagsText) {
+                const tagsCardHtml = `<div style="background:#ffc58c5e;;border-radius:8px;padding:12px 16px;margin:16px 4px;font-size:14px;line-height:1.8em;">${tagsText}</div>`;
+            //   const tagsCardHtml = `<div style="background: rgb(236, 236, 236); box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset; border-radius:8px; padding:12px 16px; margin:16px 5px; line-height:1.8;">${tagsText}</div>`;
+// const tagsCardHtml = `<div style="
+// background: #ffffff;
+// box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+// border-radius:8px; 
+// padding:12px 16px; 
+// margin:16px 5px; 
+// line-height:1.8;
+// ">
+// <style>
+// @media (prefers-color-scheme: dark) {
+//   .tag-dark-card { background:#000000 !important; }
+// }
+// </style>
+// <div class="tag-dark-card">${tagsText}</div>
+// </div>`;
+            item.content = `${tagsCardHtml}\n${item.content}`;
+                item.txtSegment = `${tagsText}\n${item.txtSegment}`;
+            }
             finalTxt += item.txtSegment;
             chaptersArr.push(item);
         } else {
@@ -381,6 +403,7 @@ export async function batchDownload(options: DownloadOptions): Promise<void> {
         metadata: {
             title: bookName,
             author: author || "未知作者",
+            description: introTxt,
             coverBlob: coverResult?.blob || null,
             coverExt: coverResult?.ext || "jpg"
         },
